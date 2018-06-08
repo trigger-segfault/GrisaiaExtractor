@@ -1,7 +1,12 @@
 # Grisaia Extract ![AppIcon](https://i.imgur.com/fDnJLIe.png)
+
 A ripping tool (Primarily for images) for the Grisaia games. *(Phantom Trigger not supported)*
 
+This is basically a polished, easy-to-use wrapper for existing programs that extract Grisaia files. (Although much of the original code has been ported to C#)
+
 **All ripping code written by asmodean:** http://asmodean.reverse.net/pages/exkifint.html
+
+**Additional thanks to ripping documentation on reddit:** https://www.reddit.com/r/grisaia/wiki/ripping
 
 I originally planned to turn this into a full-fledged Windows application that would include sprite combining but after releasing I wouldn't reach that point, I wrote up a final console version for use instead.
 
@@ -9,7 +14,7 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 ### [Image Album](https://imgur.com/a/7xouR3f)
 
-### [Get Grisaia Extractor](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.0.0)
+### [Get Grisaia Extract](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.0.0)
 
 ## About
 
@@ -31,3 +36,7 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 * Currently no command line support.
 * May not play well when not run through a Windows Console.
+
+**Example of Sorted Images:** *Note, Windows draws folder thumbnails poorly, they do not actually have alpha issues.*
+
+![Sorting Preview](https://i.imgur.com/cm07Hzd.png)
