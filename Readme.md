@@ -31,3 +31,7 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 * Currently no command line support.
 * May not play well when not run through a Windows Console.
+
+**Example of Sorted Images:** *Note, Windows draws folder thumbnails poorly, they do not actually have alpha issues.*
+
+![Sorting Preview](https://i.imgur.com/cm07Hzd.png)
