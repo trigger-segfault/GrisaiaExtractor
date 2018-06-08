@@ -1,5 +1,8 @@
 # Grisaia Extract ![AppIcon](https://i.imgur.com/fDnJLIe.png)
+
 A ripping tool (Primarily for images) for the Grisaia games. *(Phantom Trigger not supported)*
+
+This is basically a polished, easy-to-use wrapper for existing programs that extract Grisaia files. (Although much of the original code has been ported to C#)
 
 **All ripping code written by asmodean:** http://asmodean.reverse.net/pages/exkifint.html
 
