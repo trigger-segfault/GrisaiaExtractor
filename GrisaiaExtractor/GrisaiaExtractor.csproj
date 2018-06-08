@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B9E8EA56-874B-4CEB-A703-DCA3A307A4D3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GrisaiaExtractor</RootNamespace>
+    <AssemblyName>GrisaiaExtractor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Unused\Exkifint.Blowfish.cs" />
+    <None Include="Unused\Exkifint.Blowfish.Tables.cs" />
+    <Compile Include="Asmodean\Exkifint.cs" />
+    <Compile Include="Asmodean\Exkifint.MersenneTwister.cs" />
+    <Compile Include="Asmodean\Exkifint.PInvoke.cs" />
+    <Compile Include="Asmodean\Exkifint.Structs.cs" />
+    <None Include="Unused\Hgx2png.BitBuffer.cs" />
+    <Compile Include="Asmodean\Hgx2png.cs" />
+    <Compile Include="Asmodean\Hgx2png.PInvoke.cs" />
+    <Compile Include="Asmodean\Hgx2png.Structs.cs" />
+    <Compile Include="Attributes.cs" />
+    <Compile Include="AnimationHelper.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Extensions\BinaryExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.Surround.cs" />
+    <Compile Include="Identifying\Backgrounds.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extracting.cs" />
+    <Compile Include="Identifying\Character.cs" />
+    <Compile Include="Identifying\Effect.cs" />
+    <Compile Include="Identifying\Item.cs" />
+    <Compile Include="Identifying\Logo.cs" />
+    <Compile Include="Identifying\MiscChibi.cs" />
+    <Compile Include="Identifying\TmbIcon.cs" />
+    <Compile Include="Identifying\ImageIdentification.cs" />
+    <Compile Include="Identifying\ImageIdentifier.cs" />
+    <Compile Include="Identifying\Transition.cs" />
+    <Compile Include="Identifying\Unidentified.cs" />
+    <Compile Include="Identifying\UserInterface.cs" />
+    <Compile Include="Locator.cs" />
+    <Compile Include="PathHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="..\zlib\bin\zlib1.dll">
+      <TargetPath>zlib1.dll</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Asmodean\asmodean.vcxproj">
+      <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
+      <Name>asmodean</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
