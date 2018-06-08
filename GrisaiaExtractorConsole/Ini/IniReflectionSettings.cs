@@ -259,7 +259,7 @@ namespace GrisaiaExtractorConsole.Ini {
 
 		/// <summary>Saves the value to the ini property using reflection.</summary>
 		private IniProperty SaveProperty(PropertyInfo propertyInfo, object instance) {
-			string value = propertyInfo.GetValue(instance).ToString();
+			string value = propertyInfo.GetValue(instance)?.ToString() ?? "";
 			string comments = GetComments(propertyInfo);
 			bool useQuotes =
 				propertyInfo.GetCustomAttribute<UseQuotesAttribute>() != null;

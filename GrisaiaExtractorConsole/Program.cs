@@ -39,15 +39,17 @@ namespace GrisaiaExtractorConsole {
 			DrawLogo();
 			settings = new UserSettings();
 			settings.Load();
-			if (!PathHelper.IsValidDirectory(settings.Directories.CurrentDirectory)) {
+			if (!string.IsNullOrWhiteSpace(settings.Directories.CurrentDirectory) &&
+				!PathHelper.IsValidDirectory(settings.Directories.CurrentDirectory))
+			{
 				WriteError("CurrentDirectory ini setting is not valid!");
 				settings.Directories.CurrentDirectory = "";
 			}
-			if (!PathHelper.IsValidPath(settings.Directories.IntDirectory)) {
+			if (!PathHelper.IsValidRelativePath(settings.Directories.IntDirectory)) {
 				WriteError("IntDirectory ini setting is not valid!");
 				settings.Directories.IntDirectory = "Raw";
 			}
-			if (!PathHelper.IsValidPath(settings.Directories.Hg3Directory)) {
+			if (!PathHelper.IsValidRelativePath(settings.Directories.Hg3Directory)) {
 				WriteError("IntDirectory ini setting is not valid!");
 				settings.Directories.Hg3Directory = "Hg3";
 			}

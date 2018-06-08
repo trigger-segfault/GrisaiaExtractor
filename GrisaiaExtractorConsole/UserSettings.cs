@@ -24,6 +24,9 @@ namespace GrisaiaExtractorConsole {
 
 		/// <summary>Called after saving finishes only if the save was unsuccessful.</summary>
 		protected override void PostSaveFailed(Exception ex) {
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("Faied to save ini settings!");
+			Console.ForegroundColor = ConsoleColor.Gray;
 			// TODO: Log error here
 		}
 
