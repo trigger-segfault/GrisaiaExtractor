@@ -9,7 +9,7 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 ### [Image Album](https://imgur.com/a/7xouR3f)
 
-### [Get Grisaia Extractor](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.0.0)
+### [Get Grisaia Extract](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.0.0)
 
 ## About
 
