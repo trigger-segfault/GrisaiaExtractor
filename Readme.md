@@ -25,6 +25,7 @@ I originally planned to turn this into a full-fledged Windows application that w
 * Optional ability to sort all images to a categorized directory based on its name.
 * Attempts to locate all existing Grisaia games.
 * Fixes a bug with `hgx2bmp.exe` where a small selection of .hg3 didn't get all of their images extracted.
+* An .ini settings file called `GrisaiaExtract.ini` can be modified after the program is run to modify certain defaults and settings.
 
 ## Cons
 
