@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A ripping & categorizing tool for Grisaia resources. (Ripping code by asmodean)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Trigger's Tools & Games")]
-[assembly: AssemblyProduct("GrisaiaExtractorConsole")]
+[assembly: AssemblyProduct("GrisaiaExtract")]
 [assembly: AssemblyCopyright("Copyright © Robert Jordan 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
 [assembly: NeutralResourcesLanguage("en")]
 

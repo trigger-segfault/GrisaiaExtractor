@@ -56,9 +56,10 @@ namespace GrisaiaExtractor.Identifying {
 			BackgroundI.Register();
 			//BackgroundSpecialAnimation.Register();
 			Effect.Register();
+			Logo.Register();
+			StoryCGChibi.Register();
 			Character.Register();
 			MiscChibi.Register();
-			Logo.Register();
 			UserInterface.Register();
 			TmbIcon.Register();
 			Transition.Register();
@@ -105,7 +106,7 @@ namespace GrisaiaExtractor.Identifying {
 		public ImageIdentification PreIdentifyImage(string path) {
 			ImageIdentifierType identifier = GetIdentifier(path, out Match match);
 			ImageIdentification image = identifier?.Create() ?? new Unidentified();
-			image.Initialize(path, match);
+			image.Initialize(path, match, false);
 			//AddImage(image);
 			//identifier?.PostAdd?.Invoke(this, image);
 			return image;

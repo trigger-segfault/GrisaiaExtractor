@@ -85,21 +85,22 @@ namespace GrisaiaExtractor.Identifying {
 			{ "mir", "Milliela Stanfield" },
 			{ "rob", "Robert Wallson" },
 			{ "dave", "Professor Dave" },
-			{ "ev", "everyone" },
-			{ "mag", "Other" },
+			{ "dav", "Professor Dave" },
+			//{ "ev", "Everyone" },
 			{ "oth", "Other" },
-			{ "op", "Other" },
+			//{ "op", "Other" },
 		};
 
 		public static readonly Dictionary<string, string> SpriteOnlyCharacters =
 			new Dictionary<string, string>()
 		{
-			{ "meg", "Other" }, // TODO: What is her name?
+			{ "meg", "Goddess" }, // TODO: What is her name?
 			{ "cha", "Chaos" },
 			{ "gho", "Ghost" },
 			{ "str", "Stranger" },
 			{ "nan", "Other" },
 			{ "ren", "Other" },
+			{ "mag", "Other" },
 		};
 
 		public static readonly Regex FormatRegex =

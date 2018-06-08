@@ -17,15 +17,39 @@ namespace GrisaiaExtractorConsole {
 
 		static UserSettings settings;
 		
-		static void Main(string[] args) {
+		static int Main(string[] args) {
 			try {
-				Run(args);
+				bool parseSuccess;
+				bool another;
+				do {
+					Run(args);
+					if (Console.CursorLeft != 0)
+						Console.WriteLine();
+					//Console.WriteLine();
+					if (settings.General.BeepOnCompletion)
+						Console.Beep(1000, 750);
+					do {
+						Console.Write("Finished! Perform another task (y/n): ");
+						WriteWatermark("no");
+						another = ReadYesNo(false, out parseSuccess);
+					} while (!parseSuccess);
+				} while (another);
+				Console.ResetColor();
+				return 0;
 			}
 			catch (Exception ex) {
 				WriteError("An unexpected error occurred!");
+				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine(ex.ToString());
+
+				Console.WriteLine();
+				Console.WriteLine("Task Stopped! (Press any key to exit)");
+				if (settings.General.BeepOnCompletion)
+					Console.Beep(200, 750);
+				Console.ResetColor();
+				Console.Read();
+				return -1;
 			}
-			Console.ResetColor();
 		}
 
 		static private void ResetForegroundColor() {
@@ -33,6 +57,7 @@ namespace GrisaiaExtractorConsole {
 		}
 
 		private static void Run(string[] args) {
+			Console.Clear();
 			Console.BackgroundColor = ConsoleColor.Black;
 			Console.ForegroundColor = ConsoleColor.Gray;
 			Console.Title = "Grisaia Extract (Ripping written by asmodean)";
@@ -69,24 +94,31 @@ namespace GrisaiaExtractorConsole {
 			bool parseSuccess;
 
 			bool hg3 = false;
+			bool resort = false;
 			do {
-				Console.Write("What to Extract (int/hg3): ");
+				Console.Write("What to Extract (int/hg3/resort): ");
 				string input = ReadLine();
 				parseSuccess = true;
 				if (input.Equals2("int", true))
 					hg3 = false;
 				else if (input.Equals2("hg3", true))
 					hg3 = true;
+				else if (input.Equals2("resort", true))
+					resort = true;
 				else {
 					WriteError("Invalid choice!");
 					parseSuccess = false;
 				}
 			} while (!parseSuccess);
-			Game game = ReadGame(hg3);
+			Game game = ReadGame(hg3 || resort);
 			IntArgs intArgs = new IntArgs();
 			Hg3Args hg3Args = new Hg3Args();
+			PngArgs pngArgs = new PngArgs();
 			bool alsoHg3 = false;
-			if (!hg3) {
+			if (resort) {
+				pngArgs = RequestResortPngArgs(game);
+			}
+			else if (!hg3) {
 				intArgs = RequestExtractIntArgs(game);
 
 				if (intArgs.IsImage) {
@@ -104,11 +136,11 @@ namespace GrisaiaExtractorConsole {
 			}
 			using (LogInfo log = new LogInfo()) {
 				if (game != Game.All) {
-					RipGame(game, hg3, alsoHg3, intArgs, hg3Args, log);
+					RipGame(game, hg3, alsoHg3, resort, intArgs, hg3Args, pngArgs, log);
 				}
 				else {
 					foreach (Game located in Locator.LocateGames(out _)) {
-						RipGame(located, hg3, alsoHg3, intArgs, hg3Args, log);
+						RipGame(located, hg3, alsoHg3, resort, intArgs, hg3Args, pngArgs, log);
 					}
 				}
 
@@ -119,12 +151,6 @@ namespace GrisaiaExtractorConsole {
 				}
 			}
 
-
-			Console.WriteLine();
-			Console.WriteLine("Finished! (Press any key to exit)");
-			if (settings.General.BeepOnCompletion)
-				Console.Beep(1000, 750);
-			Console.Read();
 		}
 
 		private static void WriteGames(IEnumerable<Game> games) {
@@ -133,19 +159,46 @@ namespace GrisaiaExtractorConsole {
 			}
 		}
 
-		private static void RipGame(Game game, bool hg3, bool alsoHg3,
-			IntArgs intArgs, Hg3Args hg3Args, LogInfo log)
+		private static void RipGame(Game game, bool hg3, bool alsoHg3, bool resort,
+			IntArgs intArgs, Hg3Args hg3Args, PngArgs pngArgs, LogInfo log)
 		{
-			if (!hg3) {
+			if (resort) {
+				pngArgs.Game = game;
+				ResortPngs(pngArgs, log);
+				log.OperationsComplete++;
+				log.GamesComplete++;
+			}
+			else if (!hg3) {
 				intArgs.Game = game;
 				// Continue to the next process on success
-				if (ExtractIntFile(intArgs, log)) {
-					if (alsoHg3)
-						hg3 = true;
-					else
-						log.GamesComplete++;
+				string inputDir = intArgs.InputDir;
+				if (string.IsNullOrEmpty(intArgs.InputDir))
+					inputDir = intArgs.Game?.Path;
+				string[] intFiles = Directory.GetFiles(inputDir, intArgs.IntFile);
+				if (intFiles.Length == 0) {
+					LogMessage(log, $"No int files found matching `{intArgs.IntFile}`!", game);
+					WriteError($"No int files found matching `{intArgs.IntFile}`!");
+					Beep(300, 750);
+					Thread.Sleep(1500);
+					log.GamesFailed.Add(game);
+					log.OperationsComplete++;
 				}
-				log.OperationsComplete++;
+				else {
+					bool error = false;
+					for (int i = 0; i < intFiles.Length; i++) {
+						string intFile = Path.GetFileName(intFiles[i]);
+						intArgs.IntFile = intFile;
+						if (!ExtractIntFile(intArgs, log))
+							error = true;
+						log.OperationsComplete++;
+					}
+					if (!error) {
+						if (alsoHg3)
+							hg3 = true;
+						else
+							log.GamesComplete++;
+					}
+				}
 			}
 			if (hg3) {
 				hg3Args.Game = game;
@@ -200,7 +253,10 @@ namespace GrisaiaExtractorConsole {
 			Console.Clear();
 			DrawLogo();
 			WriteLog(log, false);
-			Console.WriteLine("Converting Hg3s to Pngs:");
+			if (args.Game != null)
+				Console.WriteLine($"Converting {args.Game.Name()} Hg3s to Pngs:");
+			else
+				Console.WriteLine("Converting Hg3s to Pngs:");
 			LogMessage(log, "Converting Hg3s to Pngs", args.Game);
 
 			string inputDir = args.InputDir;
@@ -245,6 +301,60 @@ namespace GrisaiaExtractorConsole {
 				});
 
 			if (!error && !args.StopOnError) {
+				LogMessage(log, "Finished!");
+				Beep();
+			}
+
+			return !error;
+		}
+
+		private static bool ResortPngs(PngArgs args, LogInfo log) {
+			Console.Clear();
+			DrawLogo();
+			WriteLog(log, false);
+			if (args.Game != null)
+				Console.WriteLine($"Resorting {args.Game.Name()} Pngs:");
+			else
+				Console.WriteLine("Resorting Pngs:");
+			LogMessage(log, "Resorting Pngs", args.Game);
+
+			string resortDir = args.ResortDir;
+			if (!string.IsNullOrEmpty(args.ResortDirAfter))
+				resortDir = Path.Combine(args.ResortDir,
+					args.Game.Name(), args.ResortDirAfter);
+
+			int line = Console.CursorTop;
+			int lastLineLength = 0;
+			bool error = false;
+			Extracting.ResortPngs(resortDir,
+				(a) => {
+					WriteProgress(line, ref lastLineLength, a);
+					return false;
+				},
+				(ex, a) => {
+					if (!error) {
+						LogMessage(log, $"Error on {a.FileName}: {ex.Message}", args.Game);
+						log.WriteLine(ex.ToString());
+						/*if (args.StopOnError) {
+							a.TotalErrors = 0;
+							WriteProgress(line, ref lastLineLength, a);
+							Console.WriteLine();
+							WriteError(ex);
+							Beep(300, 750);
+							Thread.Sleep(1500);
+							log.GamesFailed.Add(args.Game);
+							LogMessage(log, "Stopping due to error!");
+							return true;
+						}
+						else*/
+							log.GamesWithErrors.Add(args.Game);
+					}
+					error = true;
+					WriteProgress(line, ref lastLineLength, a);
+					return false;
+				});
+
+			if (!error/* && !args.StopOnError*/) {
 				LogMessage(log, "Finished!");
 				Beep();
 			}

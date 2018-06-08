@@ -18,8 +18,8 @@ namespace GrisaiaExtractorConsole {
 
 			public bool IsImage {
 				get {
-					return Path.GetFileNameWithoutExtension(IntFile)
-						.Equals2("image", true);
+					return Path.GetFileNameWithoutExtension(IntFile).ToLower()
+						.StartsWith("image");
 				}
 			}
 		}
@@ -36,11 +36,17 @@ namespace GrisaiaExtractorConsole {
 			public Game Game { get; set; }
 		}
 
+		public struct PngArgs {
+			public string ResortDir { get; set; }
+			public string ResortDirAfter { get; set; }
+			public Game Game { get; set; }
+		}
+
 		private class LogInfo : IDisposable {
 			public DateTime StartTime { get; } = DateTime.UtcNow;
 			public int GamesComplete { get; set; }
-			public List<Game> GamesWithErrors { get; } = new List<Game>();
-			public List<Game> GamesFailed { get; } = new List<Game>();
+			public HashSet<Game> GamesWithErrors { get; } = new HashSet<Game>();
+			public HashSet<Game> GamesFailed { get; } = new HashSet<Game>();
 
 			public int OperationsComplete { get; set; }
 

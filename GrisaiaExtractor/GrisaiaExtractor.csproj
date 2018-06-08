@@ -60,6 +60,7 @@
     <Compile Include="Identifying\Item.cs" />
     <Compile Include="Identifying\Logo.cs" />
     <Compile Include="Identifying\MiscChibi.cs" />
+    <Compile Include="Identifying\StoryCGChibi.cs" />
     <Compile Include="Identifying\TmbIcon.cs" />
     <Compile Include="Identifying\ImageIdentification.cs" />
     <Compile Include="Identifying\ImageIdentifier.cs" />

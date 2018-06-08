@@ -149,5 +149,56 @@ namespace GrisaiaExtractor {
 			return Path.Combine(GetProperDirectoryCapitalization(parentDirInfo),
 								parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
 		}
+
+		/// <summary>Returns a collection of all files and subfiles in the directory.</summary>
+		public static List<string> GetAllFiles(string directory) {
+			List<string> files = new List<string>();
+			AddAllFiles(files, directory);
+			return files;
+		}
+
+		/// <summary>Returns a collection of all files and subfiles in the directory.</summary>
+		public static IEnumerable<string> EnumerateAllFiles(string directory, string pattern) {
+			foreach (string file in Directory.EnumerateFiles(directory, pattern)) {
+				yield return file;
+			}
+			foreach (string dir in Directory.EnumerateDirectories(directory)) {
+				foreach (string file in EnumerateAllFiles(dir, pattern))
+					yield return file;
+			}
+		}
+
+		public static bool IsDirectoryEmpty(string directory) {
+			return !Directory.EnumerateFileSystemEntries(directory).Any();
+		}
+
+		/// <summary>Returns a collection of all files and subfiles in the directory.</summary>
+		public static void DeleteAllEmptyDirectories(string directory) {
+			foreach (string dir in Directory.GetDirectories(directory)) {
+				if (IsDirectoryEmpty(dir)) {
+					Directory.Delete(dir);
+				}
+				else {
+					DeleteAllEmptyDirectories(dir);
+					if (IsDirectoryEmpty(dir))
+						Directory.Delete(dir);
+				}
+			}
+		}
+		
+
+		//-----------------------------------------------------------------------------
+		// Internal Methods
+		//-----------------------------------------------------------------------------
+
+		/// <summary>Adds all of the files and subfiles in the directory to the list.</summary>
+		private static void AddAllFiles(List<string> files, string directory) {
+			foreach (string file in Directory.GetFiles(directory)) {
+				files.Add(file);
+			}
+			foreach (string dir in Directory.GetDirectories(directory)) {
+				AddAllFiles(files, dir);
+			}
+		}
 	}
 }

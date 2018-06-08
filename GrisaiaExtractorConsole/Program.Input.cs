@@ -89,12 +89,16 @@ namespace GrisaiaExtractorConsole {
 					args.OutputDirAfter = ReadRelativePath(defOutputDir, out parseSuccess);
 				} while (!parseSuccess);
 			}
-
+			
 			do {
 				Console.Write("Int File: ");
-				WriteWatermark("image.int");
-				args.IntFile = ReadRelativePath("image.int", out parseSuccess);
+				WriteWatermark("image*.int");
+				args.IntFile = ReadPattern("image*.int", out parseSuccess);
 			} while (!parseSuccess);
+			if (!args.IntFile.EndsWith(".int", StringComparison.OrdinalIgnoreCase) &&
+					!args.IntFile.EndsWith(".int*", StringComparison.OrdinalIgnoreCase)) {
+				args.IntFile += ".int";
+			}
 
 			return args;
 		}
@@ -198,6 +202,52 @@ namespace GrisaiaExtractorConsole {
 			return args;
 		}
 
+
+		private static PngArgs RequestResortPngArgs(Game game) {
+			PngArgs args = new PngArgs() {
+				Game = game,
+			};
+			if (game != null)
+				Console.WriteLine($"Resort {game.Name()} Pngs:");
+			else
+				Console.WriteLine($"Resort Pngs:");
+			WriteWarning("This will attempt to resort EVERY png found in the specified directory. " +
+				"Make extra sure that you do not input the wrong directory.");
+			Console.WriteLine();
+
+			bool parseSuccess;
+			
+			string defOutputDir = settings.Directories.Hg3Directory;
+			if (game == Game.All) {
+			}
+			else if (game != null) {
+				defOutputDir = Path.Combine(game.Name(), defOutputDir);
+			}
+			do {
+				if (game == Game.All) {
+					defOutputDir = ".";
+					Console.Write("Resort Directory (Before game name): ");
+					WriteWatermark("<current directory>");
+				}
+				else {
+					Console.Write("Resort Directory: ");
+					WriteWatermark(defOutputDir);
+				}
+				args.ResortDir = ReadDirectory(defOutputDir, out parseSuccess);
+			} while (!parseSuccess);
+
+			if (game == Game.All) {
+				defOutputDir = settings.Directories.Hg3Directory;
+				do {
+					Console.Write("Resort Directory (After game name): ");
+					WriteWatermark(defOutputDir);
+					args.ResortDirAfter = ReadRelativePath(defOutputDir, out parseSuccess);
+				} while (!parseSuccess);
+			}
+
+			return args;
+		}
+
 		private static string ReadLine() {
 			Console.ForegroundColor = ConsoleColor.White;
 			string line = Console.ReadLine();
@@ -242,7 +292,7 @@ namespace GrisaiaExtractorConsole {
 			else {
 				if (PathHelper.IsValidNamePattern(input))
 					return input;
-				WriteError("Input is not in 'yes/no' format!");
+				WriteError("Input is not a valid path!");
 			}
 			parseSuccess = false;
 			return "";
@@ -259,7 +309,7 @@ namespace GrisaiaExtractorConsole {
 			else {
 				if (PathHelper.IsValidPathPattern(input))
 					return input;
-				WriteError("Input is not in yes/no format!");
+				WriteError("Input is not a valid path!");
 			}
 			parseSuccess = false;
 			return "";
@@ -276,7 +326,7 @@ namespace GrisaiaExtractorConsole {
 			else {
 				if (PathHelper.IsValidDirectory(input))
 					return input;
-				WriteError("Input is not in yes/no format!");
+				WriteError("Input is not a valid path!");
 			}
 			parseSuccess = false;
 			return "";

@@ -13,6 +13,7 @@ namespace GrisaiaExtractor.Identifying {
 			"fwlogo",
 			"install",
 			"logo",
+			"sddava_logo",
 			"sekai_logo",
 			"sys_title",
 			"title",

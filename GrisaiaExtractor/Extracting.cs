@@ -196,7 +196,7 @@ namespace GrisaiaExtractor {
 					!pattern.EndsWith(".hg3*", StringComparison.OrdinalIgnoreCase)) {
 				pattern += ".hg3";
 			}
-			string[] files = Directory.EnumerateFiles(inputDir, pattern).ToArray();
+			string[] files = Directory.GetFiles(inputDir, pattern);
 			int fileCount = files.Length;
 			Hgx2pngArgs args = new Hgx2pngArgs() {
 				FileCount = fileCount,
@@ -298,6 +298,67 @@ namespace GrisaiaExtractor {
 			return identifier;
 		}
 
+		public static void ResortPngs(string resortDir,
+			Hgx2pngCallback progressCallback, Hgx2pngErrorCallback errorCallback)
+		{
+			DateTime startTime = DateTime.UtcNow;
+
+			ImageIdentifier identifier = new ImageIdentifier();
+			Hgx2pngArgs args = new Hgx2pngArgs();
+
+			string message = "Locating Pngs...";
+			Console.WriteLine(message);
+			args.FileCount = PathHelper.EnumerateAllFiles(resortDir, "*.png").Count();
+			Console.WriteLine($"\r{new string(' ', message.Length)}");
+
+			DateTime lastRefresh = DateTime.MinValue;
+			Stopwatch writeTime = new Stopwatch();
+			TimeSpan refreshTime = TimeSpan.FromMilliseconds(20);
+			int i = 0;
+			foreach (string file in PathHelper.EnumerateAllFiles(resortDir, "*.png")) {
+				//string file = files[i];
+				ImageIdentification image = identifier.PreIdentifyImage(file);
+				string path = Path.Combine(resortDir, image.OutputDirectory, Path.GetFileName(file));
+				string name = Path.GetFileName(file);
+
+				args.FileIndex = i++;
+				args.FileName = name;
+				args.FilePath = file;
+				args.Ellapsed = DateTime.UtcNow - startTime;
+				// Round to nearest hundredth
+				args.Percent = Math.Round((double) i / args.FileCount * 10000) / 100;
+				// If true, cancel operation
+				TimeSpan sinceRefresh = DateTime.UtcNow - lastRefresh;
+				if (sinceRefresh >= refreshTime) {
+					lastRefresh = DateTime.UtcNow;
+					writeTime.Start();
+					if (progressCallback?.Invoke(args) ?? false)
+						return;
+					writeTime.Stop();
+				}
+
+				if (PathHelper.IsPathTheSame(path, file))
+					continue;
+
+				string sortedDir = Path.Combine(resortDir, image.OutputDirectory);
+				Directory.CreateDirectory(sortedDir);
+				try {
+					BmpToPng(file, Hg3Sorting.Sorted, "", sortedDir);
+				}
+				catch (ExtractHg3Exception ex) {
+					args.TotalErrors++;
+					// If true, cancel operation
+					if (errorCallback?.Invoke(ex, args) ?? false)
+						return;
+				}
+			}
+			args.Ellapsed = DateTime.UtcNow - startTime;
+			args.Percent = 100.0;
+			progressCallback?.Invoke(args);
+			Trace.WriteLine($"Console Write Time: {writeTime.Elapsed:mm\\:ss\\.fff}");
+			PathHelper.DeleteAllEmptyDirectories(resortDir);
+		}
+
 		/// <summary>Converts all bitmaps with the base name and animation postfixes to pngs.</summary>
 		/// <exception cref="ExtractHg3Exception">An error occurred while trying to
 		/// convert, save, or delete.</exception>
@@ -306,7 +367,7 @@ namespace GrisaiaExtractor {
 		{
 			Exception exception = null;
 			try {
-				TryConvertBmp(bmpFile, sorting, unsortedDir, sortedDir);
+				TryCopyPng(bmpFile, sorting, unsortedDir, sortedDir);
 			}
 			catch (ExtractHg3Exception ex) {
 				exception = ex;
@@ -326,7 +387,7 @@ namespace GrisaiaExtractor {
 		/// <summary>Attempts to convert the .bmp file to a .png up to MaxRetries times.</summary>
 		/// <exception cref="ExtractHg3Exception">An error occurred while trying to
 		/// convert or save.</exception>
-		private static void TryConvertBmp(string bmpFile, Hg3Sorting sorting,
+		private static void TryCopyPng(string oldFile, Hg3Sorting sorting,
 			string unsortedDir, string sortedDir)
 		{
 			Exception exception = null;
@@ -351,11 +412,11 @@ namespace GrisaiaExtractor {
 							TrySavePng(bitmap, sortedDir, fileName);
 						return;
 					}*/
-					string fileName = Path.GetFileName(bmpFile);
+					string fileName = Path.GetFileName(oldFile);
 					if (sorting.HasFlag(Hg3Sorting.Unsorted))
-						File.Copy(bmpFile, Path.Combine(unsortedDir, fileName), true);
+						File.Copy(oldFile, Path.Combine(unsortedDir, fileName), true);
 					if (sorting.HasFlag(Hg3Sorting.Sorted))
-						File.Copy(bmpFile, Path.Combine(sortedDir, fileName), true);
+						File.Copy(oldFile, Path.Combine(sortedDir, fileName), true);
 					return;
 				}
 				catch (ExtractHg3Exception) {
@@ -373,7 +434,7 @@ namespace GrisaiaExtractor {
 				}
 			}
 			throw new ExtractHg3Exception(
-				ExtractHg3Result.BmpConvertFailed, bmpFile, exception);
+				ExtractHg3Result.BmpConvertFailed, oldFile, exception);
 		}
 
 		/// <summary>Attempts to save the bitmap as a .png up to MaxRetries times.</summary>

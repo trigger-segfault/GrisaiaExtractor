@@ -35,11 +35,13 @@ namespace GrisaiaExtractor.Identifying {
 		public ImageIdentification() { }
 
 		/// <summary>Initializes the image identification from the filepath.</summary>
-		public void Initialize(string path, Match match) {
+		public void Initialize(string path, Match match, bool findAnimaion) {
 			FileName = AnimationHelper.GetBaseFileName(path);
 
-			string[] fileNames = AnimationHelper.GetFileNames(path);
-			InitializeFileNames(fileNames);
+			if (findAnimaion) {
+				string[] fileNames = AnimationHelper.GetFileNames(path);
+				InitializeFileNames(fileNames);
+			}
 			Setup(match);
 		}
 

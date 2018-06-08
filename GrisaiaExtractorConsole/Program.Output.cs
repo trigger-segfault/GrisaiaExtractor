@@ -70,12 +70,24 @@ namespace GrisaiaExtractorConsole {
 		}
 
 		private static void WriteError(string message) {
+			if (Console.CursorLeft != 0)
+				Console.WriteLine();
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine($"Error: {message}");
 			ResetForegroundColor();
 		}
 
+		private static void WriteWarning(string message) {
+			if (Console.CursorLeft != 0)
+				Console.WriteLine();
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine($"Warning: {message}");
+			ResetForegroundColor();
+		}
+
 		private static void WriteError(Exception ex) {
+			if (Console.CursorLeft != 0)
+				Console.WriteLine();
 			Console.ForegroundColor = ConsoleColor.Red;
 			string message = ex.Message;
 			if (Debugger.IsAttached)
