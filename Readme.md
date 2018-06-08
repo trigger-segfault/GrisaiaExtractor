@@ -14,13 +14,13 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 ### [Image Album](https://imgur.com/a/7xouR3f)
 
-### [Get Grisaia Extract](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.0.0)
+### [Get Grisaia Extract](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.1.0)
 
 ## About
 
 * **Created By:** Robert Jordan
 * **Ripping By:** asmodean
-* **Version:** 1.0.0.0
+* **Version:** 1.0.1.0
 * **Language:** C#/C++
 
 ## Features
