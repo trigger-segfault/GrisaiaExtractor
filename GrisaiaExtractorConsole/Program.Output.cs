@@ -143,20 +143,14 @@ namespace GrisaiaExtractorConsole {
 			Console.Write(newLine);
 		}
 
-		/*private static void WriteProgress(int line, ref int lastLineLength, double percent, int index, int count, TimeSpan ellapsed, string fileName) {
-			Console.CursorLeft = 0;
-			Console.CursorTop = line;
-			string newLine =
-				$"[{percent.ToString("00.00")}%]" +
-				$"[{Math.Min(count, index + 1)}/{count}]" +
-				$"[{ellapsed.ToString(@"hh\:mm\:ss\.ff")}]" +
-				$" {fileName}";
-			if (newLine.Length > Console.BufferWidth)
-				newLine = newLine.Substring(0, Console.BufferWidth);
-			if (lastLineLength > newLine.Length)
-				newLine += new string(' ', lastLineLength - newLine.Length);
-			lastLineLength = newLine.Length;
-			Console.Write(newLine);
-		}*/
+		private static void Beep() {
+			if (settings.General.BeepAfterOperation)
+				Console.Beep();
+		}
+
+		private static void Beep(int frequency, int duration) {
+			if (settings.General.BeepAfterOperation)
+				Console.Beep(frequency, duration);
+		}
 	}
 }

@@ -82,6 +82,14 @@ namespace GrisaiaExtractorConsole {
 			/// <summary>True if JP game names are used instead of US names.</summary>
 			[DefaultValue(true)]
 			public bool UseJapaneseNames { get; set; }
+
+			/// <summary>Beeps after each int or hg3 operation.</summary>
+			[DefaultValue(true)]
+			public bool BeepAfterOperation { get; set; }
+
+			/// <summary>Beeps after all operations are complete.</summary>
+			[DefaultValue(true)]
+			public bool BeepOnCompletion { get; set; }
 		}
 
 		/// <summary>The custom default directories.</summary>

@@ -35,7 +35,7 @@ namespace GrisaiaExtractorConsole {
 		private static void Run(string[] args) {
 			Console.BackgroundColor = ConsoleColor.Black;
 			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.Title = "Grisaia Extractor (Ripping written by asmodean)";
+			Console.Title = "Grisaia Extract (Ripping written by asmodean)";
 			DrawLogo();
 			settings = new UserSettings();
 			settings.Load();
@@ -119,8 +119,9 @@ namespace GrisaiaExtractorConsole {
 
 
 			Console.WriteLine();
-			Console.WriteLine("Finished! (Press any key to continue)");
-			Console.Beep(1000, 750);
+			Console.WriteLine("Finished! (Press any key to exit)");
+			if (settings.General.BeepOnCompletion)
+				Console.Beep(1000, 750);
 			Console.Read();
 		}
 
@@ -178,7 +179,7 @@ namespace GrisaiaExtractorConsole {
 						return false;
 					});
 				LogMessage(log, "Finished!");
-				Console.Beep();
+				Beep();
 				return true;
 			}
 			catch (Exception ex) {
@@ -187,7 +188,7 @@ namespace GrisaiaExtractorConsole {
 				WriteError(ex);
 				LogMessage(log, $"Error: {ex.Message}", args.Game);
 				log.WriteLine(ex.ToString());
-				Console.Beep(300, 750);
+				Beep(300, 750);
 				Thread.Sleep(1500);
 				return false;
 			}
@@ -227,7 +228,7 @@ namespace GrisaiaExtractorConsole {
 							WriteProgress(line, ref lastLineLength, a);
 							Console.WriteLine();
 							WriteError(ex);
-							Console.Beep(300, 750);
+							Beep(300, 750);
 							Thread.Sleep(1500);
 							log.GamesFailed.Add(args.Game);
 							LogMessage(log, "Stopping due to error!");
@@ -243,7 +244,7 @@ namespace GrisaiaExtractorConsole {
 
 			if (!error && !args.StopOnError) {
 				LogMessage(log, "Finished!");
-				Console.Beep();
+				Beep();
 			}
 
 			return !error;
