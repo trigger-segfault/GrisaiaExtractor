@@ -1,5 +1,10 @@
 # Grisaia Extract ![AppIcon](https://i.imgur.com/fDnJLIe.png)
 
+[![Latest Release](https://img.shields.io/github/release/trigger-death/GrisaiaExtractor.svg?style=flat&label=version)](https://github.com/trigger-death/GrisaiaExtractor/releases/latest)
+[![Latest Release Date](https://img.shields.io/github/release-date-pre/trigger-death/GrisaiaExtractor.svg?style=flat&label=released)](https://github.com/trigger-death/GrisaiaExtractor/releases/latest)
+[![Total Downloads](https://img.shields.io/github/downloads/trigger-death/GrisaiaExtractor/total.svg?style=flat)](https://github.com/trigger-death/GrisaiaExtractor/releases)
+[![Creation Date](https://img.shields.io/badge/created-june%202018-A642FF.svg?style=flat)](https://github.com/trigger-death/GrisaiaExtractor/commit/2ae789f18d7387024f2b92b85cc6a21709796ed7)
+
 A ripping tool (Primarily for images) for the Grisaia games. *(Phantom Trigger not supported)*
 
 This is basically a polished, easy-to-use wrapper for existing programs that extract Grisaia files. (Although much of the original code has been ported to C#)
@@ -13,8 +18,6 @@ I originally planned to turn this into a full-fledged Windows application that w
 ![Window Preview](https://i.imgur.com/adjsvrN.png)
 
 ### [Image Album](https://imgur.com/a/7xouR3f)
-
-### [Get Grisaia Extract](https://github.com/trigger-death/GrisaiaExtractor/releases/tag/1.0.1.0)
 
 ## About
 
