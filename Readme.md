@@ -13,7 +13,7 @@ This is basically a polished, easy-to-use wrapper for existing programs that ext
 
 **Additional thanks to ripping documentation on reddit:** https://www.reddit.com/r/grisaia/wiki/ripping
 
-I originally planned to turn this into a full-fledged Windows application that would include sprite combining but after releasing I wouldn't reach that point, I wrote up a final console version for use instead.
+I originally planned to turn this into a full-fledged Windows application that would include sprite combining but after realising I wouldn't reach that point, I wrote up a final console version for use instead.
 
 ![Window Preview](https://i.imgur.com/adjsvrN.png)
 
