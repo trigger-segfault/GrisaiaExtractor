@@ -4,6 +4,7 @@
 [![Latest Release Date](https://img.shields.io/github/release-date-pre/trigger-death/GrisaiaExtractor.svg?style=flat&label=released)](https://github.com/trigger-death/GrisaiaExtractor/releases/latest)
 [![Total Downloads](https://img.shields.io/github/downloads/trigger-death/GrisaiaExtractor/total.svg?style=flat)](https://github.com/trigger-death/GrisaiaExtractor/releases)
 [![Creation Date](https://img.shields.io/badge/created-june%202018-A642FF.svg?style=flat)](https://github.com/trigger-death/GrisaiaExtractor/commit/2ae789f18d7387024f2b92b85cc6a21709796ed7)
+[![Discord](https://img.shields.io/discord/436949335947870238.svg?style=flat&logo=discord&label=chat&colorB=7389DC&link=https://discord.gg/vB7jUbY)](https://discord.gg/vB7jUbY)
 
 A ripping tool (Primarily for images) for the Grisaia games. *(Phantom Trigger not supported)*
 
