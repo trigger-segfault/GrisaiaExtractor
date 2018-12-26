@@ -126,7 +126,7 @@ namespace GrisaiaExtractor {
 				"Rakuen",
 				"The Eden of Grisaia",
 				"Grisaia no Rakuen",
-				345620,
+				345630,
 				"eden",
 				"Grisaia3.exe"));
 			Games.Add(new Game(

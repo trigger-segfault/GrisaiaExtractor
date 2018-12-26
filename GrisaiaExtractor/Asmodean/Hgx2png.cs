@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GrisaiaExtractor.Asmodean {
@@ -60,10 +61,10 @@ namespace GrisaiaExtractor.Asmodean {
 					string pngFile = Path.Combine(outputDir, MakeFileName(
 						fileName, i > 0 || hdr.EntryCount > 0, i, imgIndex++));
 
-					if (tag.Signature.StartsWith("img_al")) {
+					/*if (tag.Signature.StartsWith("img_al")) {
 						// Skip this tag
 						stream.Position += tag.Length;
-						/*HG3IMGAL imghdr = reader.ReadStruct<HG3IMGAL>();
+						HG3IMGAL imghdr = reader.ReadStruct<HG3IMGAL>();
 
 						int length = imghdr.length;
 						byte[] buffer = reader.ReadBytes(length);
@@ -79,13 +80,17 @@ namespace GrisaiaExtractor.Asmodean {
 							stdInfo.width,
 							stdInfo.height,
 							1,
-							true);*/
+							true);
 					}
 					else if (tag.Signature.StartsWith("img_jpg")) {
 						// Skip this tag
 						stream.Position += tag.Length;
 					}
-					else if (tag.Signature.StartsWith("img")) {
+					else if (tag.Signature == "imgmode") {
+						// Skip this tag
+						stream.Position += tag.Length;
+					}
+					else */if (Regex.IsMatch(tag.Signature, @"img\d+")) {
 						HG3IMG imghdr = reader.ReadStruct<HG3IMG>();
 
 						files.Add(pngFile);

@@ -61,11 +61,11 @@ namespace GrisaiaExtractorConsole {
 			public void Write(string text) => LogWriter.Write(text);
 
 			public LogInfo() {
-				LogWriter = new StreamWriter(File.OpenWrite(
-					PathHelper.CombineExecutable($"{PathHelper.ExeName}.log")));
-				LogWriter.AutoFlush = true;
-				LogWriter.BaseStream.SetLength(0);
-				//LogWriter.BaseStream.Position = LogWriter.BaseStream.Length;
+				string path = PathHelper.CombineExecutable($"{PathHelper.ExeName}.log");
+				var stream = new FileStream(path, FileMode.Append);
+				LogWriter = new StreamWriter(stream) {
+					AutoFlush = true,
+				};
 			}
 
 			public void Dispose() {
