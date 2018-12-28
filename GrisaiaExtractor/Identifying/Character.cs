@@ -103,7 +103,7 @@ namespace GrisaiaExtractor.Identifying {
 			{ "cha", "Chaos" },
 			{ "gho", "Ghost" },
 			{ "str", "Stranger" },
-			{ "nan", "Nanamo Suou" },
+			{ "nan", "Nanano Suou" },
 			{ "ren", "Renge Yamabuki" },
 			{ "mag", "Other" },
 		};
