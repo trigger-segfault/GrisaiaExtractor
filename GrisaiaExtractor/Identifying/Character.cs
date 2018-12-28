@@ -111,7 +111,7 @@ namespace GrisaiaExtractor.Identifying {
 		public static readonly Regex FormatRegex =
 			new Regex(
 				$"^((?'type'T|_?_?sd)?_?(?'name'{string.Join("|", Characters.Keys.ToArray())})|" +
-				$"^(?'type'T)?_?(?'name'{string.Join("|", SpriteOnlyCharacters.Keys.ToArray())}))",
+				$"^(?'type'T)_?(?'name'{string.Join("|", SpriteOnlyCharacters.Keys.ToArray())}))",
 				RegexOptions.IgnoreCase);
 
 		public static void Register() {
