@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GrisaiaExtractor.Identifying {
-
 	[Flags]
 	public enum BackgroundFlags {
 
@@ -101,7 +100,8 @@ namespace GrisaiaExtractor.Identifying {
 		public static readonly string[] Prefixes = {
 			"bg_etc",
 			"bgdave",
-			"b‚‡", // See: Grisaia no Meikyuu 'b‚‡62t.png'
+			"bｇ", // See: Grisaia no Meikyuu 'bｇ62t.png'
+			"b‚‡", // See: Legacy before Japanese encoding 'b‚‡62t.png'
 		};
 
 		public static readonly Regex FormatRegex = PrefixesToRegex(Prefixes);
@@ -138,7 +138,7 @@ namespace GrisaiaExtractor.Identifying {
 
 	public class Background : BackgroundBase {
 		public static readonly Regex FormatRegex =
-			new Regex(@"^bg(e|r)?(?'index'\d\d)(?'flags'[a-zA-Z0-9]*)(?:_(?'scale'[a-zA-Z0-9])(?'offset'[a-zA-Z0-9])?)?(?'offsetIndex'\d\d)?(?'leftover'.*)?$");
+			new Regex(@"^bg[ert]?(?'index'\d\d)(?'flags'[a-zA-Z0-9]*)(?:_(?'scale'[a-zA-Z0-9])(?'offset'[a-zA-Z0-9])?)?(?'offsetIndex'\d\d)?(?'leftover'.*)?$");
 		
 		public static void Register() {
 			ImageIdentifier.RegisterIdentifier<Background>(

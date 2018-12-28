@@ -33,50 +33,53 @@ namespace GrisaiaExtractor.Asmodean {
 
 			return seed;
 		}
-
-
-		private static void UnobfuscateFileName(char[] s, uint seed) {
+		
+		private static void UnobfuscateFileName(byte[] s, uint seed) {
 			const string FWD = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 			const string REV = "zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA";
 
-			MersenneTwister.Seed(seed);
-			uint key = MersenneTwister.GenRand();
-			int shift = (byte)((key >> 24) + (key >> 16) + (key >> 8) + key);
+			//MersenneTwister.Seed(seed);
+			//uint key = MersenneTwister.GenRand();
+			uint key = MersenneTwister.GenRand(seed);
+			int shift = (byte) ((key >> 24) + (key >> 16) + (key >> 8) + key);
 
-			for (int i = 0; i < s.Length; i++) {
-				char c = s[i];
-				int index = 0;
-				int index2 = shift;
+			for (int i = 0; i < s.Length; i++, shift++) {
+				byte c = s[i];
 
-				while (REV[index2 % 0x34] != c) {
-					if (REV[(shift + index + 1) % 0x34] == c) {
-						index += 1;
-						break;
+				if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+					int index = 0;
+					int index2 = shift;
+
+					while (REV[index2 % 0x34] != c) {
+						if (REV[(shift + index + 1) % 0x34] == c) {
+							index += 1;
+							break;
+						}
+
+						if (REV[(shift + index + 2) % 0x34] == c) {
+							index += 2;
+							break;
+						}
+
+						if (REV[(shift + index + 3) % 0x34] == c) {
+							index += 3;
+							break;
+						}
+
+						index += 4;
+						index2 += 4;
+
+						if (index > 0x34) {
+							break;
+						}
 					}
 
-					if (REV[(shift + index + 2) % 0x34] == c) {
-						index += 2;
-						break;
-					}
-
-					if (REV[(shift + index + 3) % 0x34] == c) {
-						index += 3;
-						break;
-					}
-
-					index += 4;
-					index2 += 4;
-
-					if (index > 0x34) {
-						break;
+					if (index < 0x34) {
+						s[i] = (byte) FWD[index];
 					}
 				}
-
-				if (index < 0x34) {
-					s[i] = FWD[index];
-				}
-
-				shift++;
+				
+				//shift++;
 			}
 
 			return;
@@ -145,6 +148,7 @@ namespace GrisaiaExtractor.Asmodean {
 			DateTime startTime = DateTime.UtcNow;
 			string gameId = FindVCode2(exeFile);
 
+
 			BinaryReader reader = new BinaryReader(stream);
 			KIFHDR hdr = reader.ReadStruct<KIFHDR>();
 
@@ -157,12 +161,25 @@ namespace GrisaiaExtractor.Asmodean {
 			uint fileKey = 0;
 			bool decrypt = false;
 
+			/*const string fileName = "bom_s.hg3";
+			const uint offset = 1112718577;
+			const int length = 1907629000;
+			const uint fileKey2 = 1457527205;
+			KIFENTRY kifEntry = new KIFENTRY {
+				FileNameRaw = new char[64],
+				Offset = offset,
+				Length = length,
+			};
+			Array.Copy(fileName.ToCharArray(), kifEntry.FileNameRaw, fileName.Length);
+			DecryptEntry(ref kifEntry, fileKey2);*/
+
 			ExkifintArgs args = new ExkifintArgs();
 			for (int i = 0; i < hdr.EntryCount; i++) {
 				if (entries[i].FileName == "__key__.dat") {
 					if (!decrypt) {
-						MersenneTwister.Seed(entries[i].Length);
-						fileKey = MersenneTwister.GenRand();
+						//MersenneTwister.Seed(entries[i].Length);
+						//fileKey = MersenneTwister.GenRand();
+						fileKey = MersenneTwister.GenRand(entries[i].Length);
 						decrypt = true;
 					}
 				}
@@ -181,10 +198,11 @@ namespace GrisaiaExtractor.Asmodean {
 
 				if (decrypt) {
 					UnobfuscateFileName(entries[i].FileNameRaw, tocSeed + i);
+					//UnobfuscateFileName(ref entries[i].FileName, tocSeed + i);
 
 					entries[i].Offset += i;
 
-					DecryptEntry(ref entries[i], fileKey);
+					DecryptEntry(ref entries[i].Info, fileKey);
 
 					/*Blowfish bf = new Blowfish();
 					bf.Set_Key((byte*) &file_key, 4);

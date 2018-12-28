@@ -37,6 +37,8 @@ namespace GrisaiaExtractor {
 		public ExtractHg3Result State { get; }
 		/// <summary>The file associated with the error.</summary>
 		public string File { get; }
+		/// <summary>The location in the unrle function where memory would have been leaked.</summary>
+		public int MemoryLeakLocation { get; }
 
 		/// <summary>Constructs the exception with a result and associated file.</summary>
 		public ExtractHg3Exception(ExtractHg3Result result, string file)
@@ -56,12 +58,12 @@ namespace GrisaiaExtractor {
 
 		/// <summary>Writes the exception message.</summary>
 		private static string WriteMessage(ExtractHg3Result result, string file,
-			Exception innerException = null) {
+			Exception innerException = null, int memoryLeak = 0) {
 			string name = Path.GetFileName(file);
 			string error = innerException?.GetType().Name ?? "Unknown Error";
 			switch (result) {
 			case ExtractHg3Result.Hg3ConvertFailed:
-				return $"hgx2bmp.exe returned with an error while trying to convert '{name}'!";
+				return $"{error}  occurred while trying to convert '{name}' to a bmp!";
 			case ExtractHg3Result.BmpConvertFailed:
 				return $"{error} occurred while trying to convert '{name}' to a png!";
 			case ExtractHg3Result.PngSaveFailed:

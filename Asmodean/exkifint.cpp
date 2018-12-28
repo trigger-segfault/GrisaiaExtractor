@@ -12,9 +12,9 @@
 
 void DecryptVCode2(
 	unsigned char* keyBuffer,
-	unsigned long keyLength,
+	unsigned long  keyLength,
 	unsigned char* vcode2Buffer,
-	unsigned long vcode2Length)
+	unsigned long  vcode2Length)
 {
 	Blowfish bf;
 	bf.Set_Key(keyBuffer, keyLength);
@@ -22,7 +22,7 @@ void DecryptVCode2(
 }
 
 void DecryptEntry(
-	KIFENTRY& entry,
+	KIFENTRYINFO& entry,
 	unsigned long fileKey)
 {
 	Blowfish bf;
@@ -32,8 +32,8 @@ void DecryptEntry(
 
 void DecryptData(
 	unsigned char* buffer,
-	unsigned long length,
-	unsigned long fileKey)
+	unsigned long  length,
+	unsigned long  fileKey)
 {
 	Blowfish bf;
 	bf.Set_Key((unsigned char*)&fileKey, 4);

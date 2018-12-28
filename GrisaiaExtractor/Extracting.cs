@@ -151,6 +151,7 @@ namespace GrisaiaExtractor {
 		/// <summary>Converts the Hg3 to a bitmap and returns all the created images.</summary>
 		/// <returns>An array of all output .bmp files. Null if an error occurred.</returns>
 		public static string[] Hg3ToBmp(string file, bool expand) {
+			Exception exception = null;
 			for (int retries = 0; retries < MaxRetries; retries++) {
 				// Run the conversion process
 				/*ProcessStartInfo start = new ProcessStartInfo() {
@@ -171,9 +172,11 @@ namespace GrisaiaExtractor {
 					return pngs.Select(p =>
 						Path.ChangeExtension(p, ".png")).ToArray();
 				}
-				catch (Exception) { }
+				catch (Exception ex) {
+					exception = ex;
+				}
 			}
-			throw new ExtractHg3Exception(ExtractHg3Result.Hg3ConvertFailed, file);
+			throw new ExtractHg3Exception(ExtractHg3Result.Unknown, file, exception);
 		}
 
 		/// <summary>Extracts all .hg3 files that meet the pattern into .png's.</summary>

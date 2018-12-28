@@ -40,7 +40,7 @@ namespace GrisaiaExtractor.Asmodean {
 
 		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
 		private extern static void DecryptEntry(
-			ref KIFENTRY entry,
+			ref KIFENTRYINFO entry,
 			uint fileKey);
 
 		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]

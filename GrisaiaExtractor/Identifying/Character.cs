@@ -88,7 +88,12 @@ namespace GrisaiaExtractor.Identifying {
 			{ "dav", "Professor Dave" },
 			//{ "ev", "Everyone" },
 			{ "oth", "Other" },
-			//{ "op", "Other" },
+				//{ "op", "Other" },
+
+			// Zankou
+			{ "iza", "Isabella Fitzgerald" },
+			{ "mro", "Marion Garland" },
+			{ "nob", "Ramon Noboa" },
 		};
 
 		public static readonly Dictionary<string, string> SpriteOnlyCharacters =
@@ -98,8 +103,8 @@ namespace GrisaiaExtractor.Identifying {
 			{ "cha", "Chaos" },
 			{ "gho", "Ghost" },
 			{ "str", "Stranger" },
-			{ "nan", "Other" },
-			{ "ren", "Other" },
+			{ "nan", "Nanamo Suou" },
+			{ "ren", "Renge Yamabuki" },
 			{ "mag", "Other" },
 		};
 

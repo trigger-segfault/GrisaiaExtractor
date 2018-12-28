@@ -5,6 +5,7 @@ using GrisaiaExtractor.Identifying;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,6 +19,10 @@ namespace GrisaiaExtractorConsole {
 		static UserSettings settings;
 		
 		static int Main(string[] args) {
+			CultureInfo.CurrentCulture = new CultureInfo("en-US"); //CultureInfo.InvariantCulture;
+			CultureInfo.CurrentUICulture = new CultureInfo("en-US"); //CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+			CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 			try {
 				bool parseSuccess;
 				bool another;

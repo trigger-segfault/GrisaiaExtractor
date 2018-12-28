@@ -18,6 +18,7 @@ namespace GrisaiaExtractor.Identifying {
 			{ "aft", "After Story" },
 			{ "mag", "Story" }, // Idol Mahou Shoujo
 			{ "ev", "Story" }, // Yuukan
+			{ "evt", "Story" }, // Zankou
 		};
 
 		/*public static readonly string[] RegexNames = {

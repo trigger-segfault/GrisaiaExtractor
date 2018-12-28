@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GrisaiaExtractor.Asmodean {
 	public static partial class Exkifint {
-		private static class MersenneTwister {
+		private class MersenneTwister {
+			#region Constants
+
 			private const int N = 624;
 			private const int M = 397;
 			private const uint MATRIX_A = 0x9908b0df;
@@ -15,23 +18,33 @@ namespace GrisaiaExtractor.Asmodean {
 
 			private const uint TEMPERING_MASK_B = 0x9d2c5680;
 			private const uint TEMPERING_MASK_C = 0xefc60000;
-			
-			private static uint dummy = 0;
-			private static uint[] mt = new uint[N];
-			private static uint mti = N + 1;
 
-			private static uint TEMPERING_SHIFT_U(uint y) => y >> 11;
-			private static uint TEMPERING_SHIFT_S(uint y) => y << 7;
-			private static uint TEMPERING_SHIFT_T(uint y) => y << 15;
-			private static uint TEMPERING_SHIFT_L(uint y) => y >> 18;
-			
-			public static void Seed(int seed) {
-				unchecked {
-					Seed((uint) seed);
-				}
+			#endregion
+
+			#region Fields
+
+			private uint dummy = 0;
+			private uint mti = N + 1;
+			private readonly uint[] mt = new uint[N];
+
+			#endregion
+
+			#region Constructors
+
+			public MersenneTwister() { }
+			public MersenneTwister(int seed) {
+				Seed(seed);
+			}
+			public MersenneTwister(uint seed) {
+				Seed(seed);
 			}
 
-			public static void Seed(uint seed) {
+			#endregion
+
+			#region Seed
+
+			public void Seed(int seed) => Seed(unchecked((uint) seed));
+			public void Seed(uint seed) {
 				for (int i = 0; i < N; i++) {
 					mt[i] = seed & 0xffff0000;
 					seed = 69069 * seed + 1;
@@ -42,7 +55,11 @@ namespace GrisaiaExtractor.Asmodean {
 				dummy = mti;
 			}
 
-			public static uint GenRand() {
+			#endregion
+
+			#region GenRand
+
+			public uint GenRand() {
 				uint y;
 				uint[] mag01 = { 0x0, MATRIX_A };
 				/* mag01[x] = x * MATRIX_A  for x=0,1 */
@@ -78,6 +95,32 @@ namespace GrisaiaExtractor.Asmodean {
 
 				return y;
 			}
+
+			#endregion
+
+			#region Static GenRand
+
+			public static uint GenRand(int seed) {
+				return new MersenneTwister(seed).GenRand();
+			}
+			public static uint GenRand(uint seed) {
+				return new MersenneTwister(seed).GenRand();
+			}
+
+			#endregion
+
+			#region Tempering Shift
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private static uint TEMPERING_SHIFT_U(uint y) => y >> 11;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private static uint TEMPERING_SHIFT_S(uint y) => y << 7;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private static uint TEMPERING_SHIFT_T(uint y) => y << 15;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private static uint TEMPERING_SHIFT_L(uint y) => y >> 18;
+
+			#endregion
 		}
 	}
 }

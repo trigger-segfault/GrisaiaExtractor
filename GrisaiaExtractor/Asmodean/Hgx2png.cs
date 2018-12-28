@@ -239,8 +239,8 @@ namespace GrisaiaExtractor.Asmodean {
 		private static void ProcessImage(BinaryReader reader,
 			string file, HG3STDINFO std, HG3IMG img, bool expand = true)
 		{
-			int depthBytes = std.DepthBits / 8;
-			int stride = std.Width * depthBytes;
+			int depthBytes = (std.DepthBits + 7) / 8;
+			int stride = (std.Width * depthBytes + 3) / 4 * 4;
 
 			#region Old Code
 			/*byte[] buffer = new byte[img.OriginalDataLength];
@@ -321,8 +321,8 @@ namespace GrisaiaExtractor.Asmodean {
 			if (expand) {
 				int offsetXBytes = std.OffsetX * depthBytes;
 				//int offsetYVert = std.TotalHeight - std.OffsetY - std.Height;
-
-				int expStride = std.TotalWidth * depthBytes;
+				
+				int expStride = (std.TotalWidth * depthBytes + 3) / 4 * 4;
 				byte[] expBuffer = new byte[std.TotalHeight * expStride];
 
 				for (int y = 0; y < std.Height; y++) {
@@ -331,17 +331,6 @@ namespace GrisaiaExtractor.Asmodean {
 					int dst = (std.Height - (y + 1) + std.OffsetY) * expStride + offsetXBytes;
 					Array.Copy(rgbaBuffer, src, expBuffer, dst, stride);
 				}
-				/*fixed (byte* pRgbaBuffer = rgbaBuffer)
-				fixed (byte* pExpBuffer = expBuffer) {
-					for (int y = 0; y < std.Height; y++) {
-						byte* src = pRgbaBuffer + y * stride;
-						byte* dst = pExpBuffer + (y + offsetYVert) * expStride;
-
-						for (int x = 0; x < stride; x++) {
-							dst[offsetXBytes + x] = src[x];
-						}
-					}
-				}*/
 
 				std.Width = std.TotalWidth;
 				std.Height = std.TotalHeight;
@@ -357,19 +346,24 @@ namespace GrisaiaExtractor.Asmodean {
 				rgbaBuffer = flipBuffer;
 			}
 
-			WritePng(file, rgbaBuffer, std.Width, std.Height);
+			WritePng(file, rgbaBuffer, std.Width, std.Height, std.DepthBits);
 		}
 
 		private static void WritePng(string file, byte[] buffer, int width,
-			int height)
+			int height, int depthBits)
 		{
 			GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
 			try {
 				IntPtr scan0 = handle.AddrOfPinnedObject();
-				int stride = width * 4;
-				using (Bitmap bitmap = new Bitmap(width, height, stride,
-					PixelFormat.Format32bppArgb, scan0))
-				{
+				int depthBytes = (depthBits + 7) / 8;
+				int stride = (width * depthBytes + 3) / 4 * 4;
+				PixelFormat format;
+				switch (depthBits) {
+				case 32: format = PixelFormat.Format32bppArgb; break;
+				case 24: format = PixelFormat.Format24bppRgb;  break;
+				default: throw new Exception($"Unsupported depth bits {depthBits}!");
+				}
+				using (Bitmap bitmap = new Bitmap(width, height, stride, format, scan0)) {
 					//if (flip)
 					//	bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 					bitmap.Save(file, ImageFormat.Png);
@@ -380,10 +374,10 @@ namespace GrisaiaExtractor.Asmodean {
 			}
 		}
 
-		private static byte[] ProcessImageInternal(BinaryReader reader,
-			HG3STDINFO std, HG3IMG img, out byte[] rgbaBuffer)
+		private static byte[] ProcessImageInternal(BinaryReader reader, HG3STDINFO std, HG3IMG img,
+			out byte[] rgbaBuffer)
 		{
-			int depthBytes = std.DepthBits / 8;
+			int depthBytes = (std.DepthBits + 7) / 8;
 
 			byte[] bufferTmp = reader.ReadBytes(img.DataLength);
 			byte[] cmdBufferTmp = reader.ReadBytes(img.CmdLength);
@@ -396,7 +390,6 @@ namespace GrisaiaExtractor.Asmodean {
 				cmdBufferTmp,
 				img.CmdLength,
 				img.OriginalCmdLength,
-				//rgbaBuffer,
 				out IntPtr pRgbaBuffer,
 				out int rgbaLength,
 				std.Width,
@@ -406,7 +399,6 @@ namespace GrisaiaExtractor.Asmodean {
 			rgbaBuffer = new byte[rgbaLength];
 			Marshal.Copy(pRgbaBuffer, rgbaBuffer, 0, rgbaLength);
 			Marshal.FreeHGlobal(pRgbaBuffer);
-			//Marshal.FreeCoTaskMem(pRgbaBuffer);*/
 			return rgbaBuffer;
 		}
 	}

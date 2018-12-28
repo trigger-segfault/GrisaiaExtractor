@@ -64,6 +64,9 @@ namespace GrisaiaExtractor.Extensions {
 		public static string ToNullTerminatedString(this byte[] chars) {
 			return Encoding.ASCII.GetString(chars, 0, chars.IndexOfNullTerminator());
 		}
+		public static string ToNullTerminatedString(this byte[] chars, Encoding encoding) {
+			return encoding.GetString(chars, 0, chars.IndexOfNullTerminator());
+		}
 
 		public static string ToNullTerminatedString(this char[] chars) {
 			return new string(chars, 0, chars.IndexOfNullTerminator());

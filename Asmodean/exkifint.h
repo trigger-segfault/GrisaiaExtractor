@@ -14,8 +14,7 @@
 
 #include "asmodean.h"
 
-struct KIFENTRY {
-	char           filename[64];
+struct KIFENTRYINFO {
 	unsigned long  offset;
 	unsigned long  length;
 };
@@ -27,7 +26,7 @@ ASMODEAN_API void DecryptVCode2(
 	unsigned long  vcode2Length);
 
 ASMODEAN_API void DecryptEntry(
-	KIFENTRY&      entry,
+	KIFENTRYINFO&  entry,
 	unsigned long  fileKey);
 
 ASMODEAN_API void DecryptData(
