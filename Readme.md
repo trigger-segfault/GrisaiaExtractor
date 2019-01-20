@@ -24,7 +24,6 @@ I originally planned to turn this into a full-fledged Windows application that w
 
 * **Created By:** Robert Jordan
 * **Ripping By:** asmodean
-* **Version:** 1.0.1.0
 * **Language:** C#/C++
 
 ## Features
